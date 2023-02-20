@@ -1,0 +1,45 @@
+schema: '2.0'
+stages:
+  preprocess:
+    cmd: python -m src.preprocess filespace/train.csv filespace/train_processed.csv
+    deps:
+    - path: filespace/train.csv
+      md5: f147942c91d00d754503775341d13682
+      size: 987712
+    outs:
+    - path: filespace/train_processed.csv
+      md5: 6351d723338424685339d086400053ee
+      size: 1431892
+  feature_engineering:
+    cmd: python -m src.feature_engineering filespace/train_processed.csv filespace/train_with_features.csv
+    deps:
+    - path: filespace/train_processed.csv
+      md5: 6351d723338424685339d086400053ee
+      size: 1431892
+    outs:
+    - path: filespace/train_with_features.csv
+      md5: 2679d73d6d72de0e5a2ef4851ef5ddc5
+      size: 1501282
+  train_test_split:
+    cmd: python -m src.train_test_split filespace/train_bert.csv filespace/splitted_dataset/
+    deps:
+    - path: filespace/train_bert.csv
+      md5: bb19374ec03207b000031c8233961129
+      size: 2327644
+    outs:
+    - path: filespace/splitted_dataset/test.csv
+      md5: 03c7ebfb4406cbd84e4d4c8337a4f495
+      size: 467154
+    - path: filespace/splitted_dataset/train.csv
+      md5: 44217971425237fca12d866a043914e2
+      size: 1860563
+  add_bert_text:
+    cmd: python -m src.add_bert_text filespace/train_with_features.csv filespace/train_bert.csv
+    deps:
+    - path: filespace/train_with_features.csv
+      md5: 2679d73d6d72de0e5a2ef4851ef5ddc5
+      size: 1501282
+    outs:
+    - path: filespace/train_bert.csv
+      md5: bb19374ec03207b000031c8233961129
+      size: 2327644

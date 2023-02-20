@@ -1,0 +1,26 @@
+stages:
+  preprocess:
+    cmd: python -m src.preprocess filespace/train.csv filespace/train_processed.csv
+    deps:
+      - filespace/train.csv
+    outs:
+      - filespace/train_processed.csv
+  feature_engineering:
+    cmd: python -m src.feature_engineering filespace/train_processed.csv filespace/train_with_features.csv
+    deps:
+      - filespace/train_processed.csv
+    outs:
+      - filespace/train_with_features.csv
+  add_bert_text:
+    cmd: python -m src.add_bert_text filespace/train_with_features.csv filespace/train_bert.csv
+    deps:
+      - filespace/train_with_features.csv
+    outs:
+      - filespace/train_bert.csv
+  train_test_split:
+    cmd: python -m src.train_test_split filespace/train_bert.csv filespace/splitted_dataset/
+    deps:
+      - filespace/train_bert.csv
+    outs:
+      - filespace/splitted_dataset/train.csv
+      - filespace/splitted_dataset/test.csv
